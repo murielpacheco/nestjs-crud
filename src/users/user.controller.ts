@@ -1,4 +1,15 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  Param,
+  Post,
+  Put,
+  Res,
+} from '@nestjs/common';
+import { Response } from 'express';
 import { User } from './User';
 import { UserService } from './user.service';
 
@@ -19,5 +30,18 @@ export class UserController {
   @Get(':id')
   findOne(@Param() params) {
     return this.userService.findById(params.id);
+  }
+
+  @Put(':id')
+  update(@Param() params, @Body() body: User) {
+    return this.userService.updateUser(params.id, body);
+  }
+
+  @Delete(':id')
+  @HttpCode(204)
+  remove(@Res() res: Response, @Param() params) {
+    this.userService.deleteUser(params.id);
+
+    return res.json({ message: 'User deleted successfully' });
   }
 }
